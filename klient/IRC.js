@@ -4,9 +4,9 @@ export default class IRC {
         this.chatbox = chatbox
         this.nick = nick
 
-        this.colors = ["red", "blue", "yellow", "green", "purple", "orange"]
+        this.colors = ["red", "blue", "yellow", "green", "purple", "orange", "magenta", "brown", "darkorange"]
 
-        let random = Math.floor(Math.random() * 5)
+        let random = Math.floor(Math.random() * 9)
 
         this.color = this.colors[random]
     }
@@ -30,8 +30,19 @@ export default class IRC {
             sessionStorage.setItem("nick", this.message.value.split(" ")[1])
             this.nick = this.message.value.split(" ")[1]
             console.log(sessionStorage)
-        }
-        else {
+        } else if (this.message.value.split(" ")[0] == "/color") {
+            if (this.message.value.split(" ")[1] != undefined) {
+                this.color = this.message.value.split(" ")[1]
+            } else {
+                let random = Math.floor(Math.random() * 9)
+                this.color = this.colors[random]
+                console.log(this.colors[random])
+            }
+            console.log(this.color)
+        } else if (this.message.value == "/quit") {
+            window.close()
+            console.log(location)
+        } else {
             fetch('/send/', {
                 method: 'post',
                 headers: {
@@ -39,7 +50,7 @@ export default class IRC {
                 },
                 body: JSON.stringify(data),
             })
-            this.polling()
+           
         }
         this.message.value = ""
     }
@@ -47,7 +58,7 @@ export default class IRC {
 
     async polling() {
         console.log("polling")
-        let res = await fetch('/poll/', {
+        fetch('/poll/', {
                 method: 'GET',
 
             })
@@ -58,7 +69,7 @@ export default class IRC {
                 let nickname = document.createElement("div")
                 let message = document.createElement("div")
 
-                nickname.innerHTML = data.nickname
+                nickname.innerHTML = data.nickname + " "
                 message.innerHTML = " <" + data.time + "> " + data.message
                 $(message).emoticonize()
                 divek.appendChild(nickname).style.color = data.color
@@ -67,13 +78,18 @@ export default class IRC {
                 divek.style.display = "flex"
                 this.chatbox.appendChild(divek)
 
+
+                this.chatbox.scrollTop = this.chatbox.scrollHeight
+               
+
+                this.polling()
             })
             .catch(error => {
                 console.log(error)
-
+                this.polling()
             })
 
-        console.log("res", res)
-        this.polling()
+
+  
     }
 }
