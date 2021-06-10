@@ -24,7 +24,7 @@ export default class IRC {
             color: this.color
         }
 
-        console.log(this.message.value.split(" ")[0])
+        console.log(this.message.value)
         if (this.message.value.split(" ")[0] == "/nick") {
             console.log(this.message.value)
             sessionStorage.setItem("nick", this.message.value.split(" ")[1])
@@ -40,9 +40,13 @@ export default class IRC {
             }
             console.log(this.color)
         } else if (this.message.value == "/quit") {
-            window.close()
+            document.querySelector("body").innerHTML = "no fajnie sobie wyszedłeś z irca"
             console.log(location)
-        } else {
+        }
+        else if(this.message.value == ""){
+
+        }
+         else {
             fetch('/send/', {
                 method: 'post',
                 headers: {
