@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const longpoll = require("express-longpoll")(app);
 const path = require("path")
+const PORT = process.env.PORT || 3000;
 const bodyParser = require("body-parser")
 app.use(express.static(path.join(__dirname, "klient")))
 
@@ -30,6 +31,6 @@ app.post('/send', (req, res) => {
   res.send("POST Request Called")
 })
 
-app.listen(3000, function () {
-  console.log("Listening on port 3000");
+app.listen(PORT, function () {
+  console.log("Listening on port " + PORT);
 });
